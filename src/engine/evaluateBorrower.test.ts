@@ -36,10 +36,13 @@ describe('rule safety', () => {
   })
 
   it('treats unknown existing EMI more conservatively than a known zero EMI', () => {
-    const knownZero = evaluateBorrower({ ...demoCases.priya, existingEmis: 0 })
-    const unknown = evaluateBorrower({ ...demoCases.priya, existingEmis: null })
-    expect(unknown.lenderSanction.high).toBeLessThan(knownZero.lenderSanction.high)
-  })
+  const base = { ...demoCases.priya, incomeLow: 80000, incomeHigh: 80000 }
+  const knownZero = evaluateBorrower({ ...base, existingEmis: 0 })
+  const unknown = evaluateBorrower({ ...base, existingEmis: null })
+
+  expect(unknown.lenderSanction.high)
+    .toBeLessThan(knownZero.lenderSanction.high)
+})
 
   it('separates household support from lender-counted co-applicant income', () => {
     const householdOnly = evaluateBorrower({ ...demoCases.ravi, coApplicantMonthlyIncome: null })
